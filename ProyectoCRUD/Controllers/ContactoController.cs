@@ -25,7 +25,7 @@ namespace ProyectoCRUD.Controllers
         }
 
         [HttpPost]
-        [Route("Guarda")]
+        [Route("Guardar")]
         public async Task<IActionResult> Guardar([FromBody] Contacto request)
         {
             await _dbcontext.Contactos.AddAsync(request);

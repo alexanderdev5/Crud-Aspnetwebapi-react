@@ -1,11 +1,15 @@
 
 import { useEffect, useState } from 'react';
 import { Col, Container, Row, Card, CardHeader, CardBody, Button } from 'reactstrap'
+import ModalContact from './componentes/ModalContacto';
 import TablaContacto from './componentes/TablaContacto'
 
 const App = () => {
 
+    
+
     const [contactos, setContactos] = useState([]);
+    const [mostrarModal, setMostrarModal] = useState(false);
 
     const mostrarContactos = async () => {
         const response = await fetch("api/contacto/Lista");
@@ -21,9 +25,22 @@ const App = () => {
         
         setTimeout(() => {
             mostrarContactos();
-        }, 5000);
+        }, 2000);
     },[])
 
+    const guardarContacto = async(contacto) => {
+        const response = await fetch("api/contacto/Guardar", {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(contacto)
+        })
+        if (response.ok) {
+            setMostrarModal(!mostrarModal);
+            mostrarContactos();
+        }
+    }
 
 
     return (
@@ -37,7 +54,7 @@ const App = () => {
 
                         </CardHeader>
                         <CardBody>
-                            <Button size="sm" color ="success">
+                            <Button size="sm" color="success" onClick={ () => setMostrarModal(!mostrarModal) }>
                                Nuevo Contacto
                             </Button>
                             <TablaContacto data={contactos} />
@@ -46,6 +63,11 @@ const App = () => {
                 </Col>
                     
             </Row>
+
+            <ModalContact mostrarModal={mostrarModal}
+                setMostrarModal={setMostrarModal}
+                guardarContacto={guardarContacto}
+            />
         </Container>
                 
         )
