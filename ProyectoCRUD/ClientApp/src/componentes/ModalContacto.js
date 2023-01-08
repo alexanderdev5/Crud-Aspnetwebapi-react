@@ -12,7 +12,7 @@ const modeloContacto = {
 }
 
 
-const ModalContact = ({ mostrarModal,setMostrarModal, guardarContacto}) => {
+const ModalContact = ({ mostrarModal, setMostrarModal, guardarContacto, editar, setEditar, editarContacto }) => {
 
     const [contacto, setContacto] = useState(modeloContacto);
 
@@ -31,20 +31,38 @@ const ModalContact = ({ mostrarModal,setMostrarModal, guardarContacto}) => {
 
         if (contacto.idContacto == 0) {
             guardarContacto(contacto)
+        } else {
+            editarContacto(contacto);
         }
+        setContacto(modeloContacto);
+    }
 
+    useEffect(() => {
+
+        if (editar != null) {
+            setContacto(editar);
+        } 
+        else{
+            setContacto(modeloContacto);
+        }
+    }, [editar])
+
+    const cerrarModal = () => {
+        setMostrarModal(!mostrarModal);
+        setEditar(null);
     }
 
     return (
         <Modal isOpen={mostrarModal}>
             <ModalHeader>
-                Nuevo Contacto
+                {contacto.idContacto == 0 ? 'Nuevo Contacto' : 'Editar contacto' }
+                
             </ModalHeader>
             <ModalBody>
                 <Form>
                     <FormGroup>
                         <Label>Nombre</Label>
-                        <Input name="nombre" onChange={(e) => actualizarDato(e)} value={contacto.name } />
+                        <Input name="nombre" onChange={(e) => actualizarDato(e)} value={contacto.nombre} />
                     </FormGroup>
 
                     <FormGroup>
@@ -60,7 +78,7 @@ const ModalContact = ({ mostrarModal,setMostrarModal, guardarContacto}) => {
             </ModalBody>
             <ModalFooter>
                 <Button color="primary" size="sm" onClick={enviarDatos }>Guardar</Button>
-                <Button color="danger" size="sm" onClick={() => setMostrarModal(!mostrarModal) }>Cerrar</Button>
+                <Button color="danger" size="sm" onClick={cerrarModal }>Cerrar</Button>
 
             </ModalFooter>
 

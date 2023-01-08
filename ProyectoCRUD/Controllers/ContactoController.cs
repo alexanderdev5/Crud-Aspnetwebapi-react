@@ -49,6 +49,8 @@ namespace ProyectoCRUD.Controllers
         public async Task<IActionResult> Eliminar(int id)
         {
             Contacto contacto =  _dbcontext.Contactos.Find(id);
+
+            _dbcontext.Contactos.Remove(contacto);
             await _dbcontext.SaveChangesAsync();
 
             return StatusCode(StatusCodes.Status200OK, "ok");
